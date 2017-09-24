@@ -1,4 +1,4 @@
-package com.example.bearboat.lslsapp.data.remote;
+package com.example.bearboat.lslsapp.manager;
 
 /**
  * Created by BearBoat on 2017-09-23.

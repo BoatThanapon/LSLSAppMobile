@@ -1,4 +1,4 @@
-package com.example.bearboat.lslsapp.models;
+package com.example.bearboat.lslsapp.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
