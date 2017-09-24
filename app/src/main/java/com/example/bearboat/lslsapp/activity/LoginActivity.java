@@ -83,7 +83,7 @@ public class LoginActivity extends AppCompatActivity {
     private void login(String username, String password) {
 
         mAPIService = ApiUtils.getAPIService();
-        mAPIService.GetTruckDrivers().enqueue(new Callback<TruckDriver>() {
+        mAPIService.CheckLogin(username,password).enqueue(new Callback<TruckDriver>() {
             @Override
             public void onResponse(Call<TruckDriver> call, Response<TruckDriver> response) {
 

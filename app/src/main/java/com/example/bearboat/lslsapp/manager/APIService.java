@@ -14,9 +14,9 @@ import retrofit2.http.POST;
 
 public interface APIService {
 
-    @POST("account/checkLogin/")
+    @POST("/account/checkLogin/")
     @FormUrlEncoded
-    Call<TruckDriver> login(@Field("username") String username,
+    Call<TruckDriver> CheckLogin(@Field("username") String username,
                             @Field("password") String password);
 
     @GET("truckdriver/1")
