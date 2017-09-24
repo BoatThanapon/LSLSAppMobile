@@ -5,18 +5,18 @@
         android:id="@+id/action_maps"
         android:enabled="true"
         android:icon="@drawable/ic_map_white_24dp"
-        android:title="Maps"
+        android:title="@string/tab_maps"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_jobs"
         android:enabled="true"
         android:icon="@drawable/ic_list_white_24dp"
-        android:title="Jobs"
+        android:title="@string/tab_jobs"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_profile"
         android:enabled="true"
         android:icon="@drawable/ic_person_white_24dp"
-        android:title="Profile"
+        android:title="@string/tab_profile"
         app:showAsAction="ifRoom"/>
 </menu>
