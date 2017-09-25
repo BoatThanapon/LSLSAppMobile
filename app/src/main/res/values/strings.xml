@@ -6,4 +6,8 @@
     <string name="tab_profile">Profile</string>
 
     <string name="double_back_exit">Press once again to exit!</string>
+
+    <string name="invalid_credential">"An invalid username or password was entered!</string>
+
+    <string name="pref_name">"MyPrefsFile"</string>
 </resources>
