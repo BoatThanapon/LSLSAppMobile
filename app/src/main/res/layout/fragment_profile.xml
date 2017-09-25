@@ -1,60 +1,70 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorGray">
 
     <TextView
-        android:id="@+id/barTitle"
+        android:id="@+id/tvProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/darker_gray"
+        android:background="@color/colorPrimary"
+        android:padding="5dp"
         android:text="Profile"
-        android:layout_centerHorizontal="true"
-        android:textSize="22dp"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="24dp" />
 
-    <ImageView
-        android:id="@+id/imageview_profile"
-        android:layout_below="@+id/barTitle"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:adjustViewBounds="true"
-        android:background="@android:color/darker_gray" />
-
-    <TextView
-        android:id="@+id/textviewName"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/reProfile"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageview_profile"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="Name: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:background="@color/colorWhite"
+        android:layout_below="@+id/tvProfile"
+        android:paddingBottom="20dp">
 
-    <TextView
-        android:id="@+id/textviewTruckId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textviewName"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:text="TruckId: "
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <ImageView
+            android:id="@+id/imageview_profile"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/textviewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageview_profile"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="Name: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textviewTruckId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textviewName"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="TruckId: "
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/buttonLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textviewTruckId"
-        android:layout_marginTop="45dp"
+        android:layout_below="@+id/reProfile"
         android:layout_marginBottom="94dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:text="Logout"
-        android:textColor="@color/colorLogout"
-        android:background="@color/colorAccent"
-        android:paddingLeft="15dp"/>
+        android:layout_marginTop="10dp"
+        android:background="@color/colorWhite"
+        android:text="Log out"
+        android:textAlignment="gravity"
+        android:textColor="@color/colorLogout" />
 
 </RelativeLayout>

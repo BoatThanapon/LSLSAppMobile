@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LSLSApp</string>
+    <string name="app_name">LSLS</string>
 
     <string name="tab_maps">Maps</string>
     <string name="tab_jobs">Jobs</string>

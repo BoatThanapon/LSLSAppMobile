@@ -4,6 +4,7 @@ package com.example.bearboat.lslsapp.manager;
  * Created by BearBoat on 2017-09-23.
  */
 
+import com.example.bearboat.lslsapp.model.ResponseStatus;
 import com.example.bearboat.lslsapp.model.TruckDriver;
 
 import retrofit2.Call;
@@ -14,10 +15,11 @@ import retrofit2.http.POST;
 
 public interface APIService {
 
-    @POST("/account/checkLogin/")
+    @POST("/Account/CheckLogin")
     @FormUrlEncoded
-    Call<TruckDriver> CheckLogin(@Field("username") String username,
-                            @Field("password") String password);
+    Call<ResponseStatus> CheckLogin(@Field("username") String username,
+                                    @Field("password") String password);
+
 
     @GET("truckdriver/1")
     Call<TruckDriver> GetTruckDrivers();

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.example.bearboat.lslsapp.R;
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment{
 
     public static MapsFragment newInstance() {
         MapsFragment fragment = new MapsFragment();
@@ -20,7 +20,10 @@ public class MapsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
         initInstances(rootView);
+
         return rootView;
+
+
     }
 
     private void initInstances(View rootView) {
@@ -44,6 +47,7 @@ public class MapsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         Bundle bundle = getArguments();
 
+
         if (bundle != null) {
         }
 
@@ -51,5 +55,6 @@ public class MapsFragment extends Fragment {
             // Restore Instance State here
         }
     }
+
 
 }
