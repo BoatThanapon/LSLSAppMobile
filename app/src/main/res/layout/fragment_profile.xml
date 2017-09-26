@@ -1,15 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorGray">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:padding="5dp"
+        android:background="@color/colorTheme"
+        android:padding="8dp"
         android:text="Profile"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
@@ -19,29 +18,32 @@
         android:id="@+id/reProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorWhite"
         android:layout_below="@+id/tvProfile"
+        android:background="@color/colorWhite"
         android:paddingBottom="20dp">
 
-        <ImageView
-            android:id="@+id/imageview_profile"
+        <ImageButton
+            android:id="@+id/user_profile_photo"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="25dp"
-            android:adjustViewBounds="true"
-            android:background="@android:color/darker_gray" />
+            android:layout_marginTop="16dp"
+            android:background="@drawable/user_profile_image_background"
+            android:elevation="4dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_avatar" />
 
         <TextView
             android:id="@+id/textviewName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/imageview_profile"
+            android:layout_below="@+id/user_profile_photo"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="15dp"
+            android:textSize="22dp"
             android:text="Name: "
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
 
         <TextView
             android:id="@+id/textviewTruckId"
@@ -49,8 +51,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textviewName"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="16dp"
-            android:text="TruckId: "
+            android:layout_marginTop="5dp"
+            android:text="Truck ID: "
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
     </RelativeLayout>
@@ -62,9 +64,9 @@
         android:layout_below="@+id/reProfile"
         android:layout_marginBottom="94dp"
         android:layout_marginTop="10dp"
-        android:background="@color/colorWhite"
+        android:background="#d67601"
         android:text="Log out"
         android:textAlignment="gravity"
-        android:textColor="@color/colorLogout" />
+        android:textColor="@color/colorWhite" />
 
 </RelativeLayout>

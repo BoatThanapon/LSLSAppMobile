@@ -8,11 +8,11 @@
         android:id="@+id/tvMap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorTheme"
         android:text="LSLS"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:textSize="24dp"
-        android:padding="5dp"/>
+        android:padding="8dp"/>
 
 </LinearLayout>

@@ -8,9 +8,9 @@
         android:id="@+id/tvProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:padding="5dp"
-        android:text="My Job"
+        android:background="@color/colorTheme"
+        android:padding="8dp"
+        android:text="@string/tab_jobs"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:textSize="24dp" />

@@ -2,7 +2,7 @@
     <string name="app_name">LSLS</string>
 
     <string name="tab_maps">Maps</string>
-    <string name="tab_jobs">Jobs</string>
+    <string name="tab_jobs">My Jobs</string>
     <string name="tab_profile">Profile</string>
 
     <string name="double_back_exit">Press once again to exit!</string>
