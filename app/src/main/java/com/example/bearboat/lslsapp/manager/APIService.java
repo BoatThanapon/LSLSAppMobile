@@ -21,6 +21,6 @@ public interface APIService {
     Call<LoginStatus> CheckLogin(@Query("username") String username,
                                  @Query("password") String password);
 
-    @GET("truckdriver/1")
-    Call<TruckDriver> GetTruckDrivers();
+    @GET("truckdriver")
+    Call<TruckDriver> GetTruckDriverInfo(@Query("truckDriverId") String truckDriverId);
 }
