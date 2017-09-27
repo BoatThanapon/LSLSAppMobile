@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private void login(String username, String password) {
 
         mAPIService = ApiUtils.getAPIService();
-        mAPIService.CheckLogin(username, password).enqueue(new Callback<LoginStatus>() {
+        mAPIService.checkLogin(username, password).enqueue(new Callback<LoginStatus>() {
 
             @Override
             public void onResponse(Call<LoginStatus> call, Response<LoginStatus> response) {

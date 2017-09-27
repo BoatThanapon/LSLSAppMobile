@@ -12,4 +12,6 @@
     <string name="login_title">LSLS Login</string>
     <string name="invalid_credential">"An invalid username or password was entered!</string>
 
+    <string name="google_map_key">AIzaSyC8eTxK26oSiRF8foiQxkxXXWIWwUq_uAI</string>
+
 </resources>

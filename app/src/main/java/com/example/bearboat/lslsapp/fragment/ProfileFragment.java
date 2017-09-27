@@ -63,7 +63,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         {
             tvTruckId.setText(MySharedPreference.getPref(MySharedPreference.TRUCK_ID, getContext()));
             tvName.setText(MySharedPreference.getPref(MySharedPreference.TRUCK_NAME, getContext()));
-            tvAddress.setText(MySharedPreference.getPref(MySharedPreference.TRUCK_ADDRESS, getContext()));
+            tvAddress.setText("Your Driving License: " +
+                    MySharedPreference.getPref(MySharedPreference.TRUCK_LICENSE_ID, getContext())
+                    + "\n" + MySharedPreference.getPref(MySharedPreference.TRUCK_ADDRESS, getContext()));
 
         } else {
 
@@ -76,7 +78,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     private void getTruckDriverInfo(String truckDriverId) {
 
         mAPIService = ApiUtils.getAPIService();
-        mAPIService.GetTruckDriverInfo(truckDriverId).enqueue(new Callback<TruckDriver>() {
+        mAPIService.getTruckDriverInfo(truckDriverId).enqueue(new Callback<TruckDriver>() {
             @Override
             public void onResponse(Call<TruckDriver> call, Response<TruckDriver> response) {
 
@@ -149,7 +151,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         tvName.setText(truckDriver.getTruckDriverFullname());
         tvTruckId.setText(truckDriver.getTruckId());
-        tvAddress.setText(truckDriver.getTruckDriverAddress());
+        tvAddress.setText("Your Driving License: " +
+                truckDriver.getTruckDriverDriverLicenseId()
+                + "\n" + truckDriver.getTruckDriverAddress());
 
         MySharedPreference.putPref(MySharedPreference.TRUCK_NAME,
                 truckDriver.getTruckDriverFullname(),
@@ -157,6 +161,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         MySharedPreference.putPref(MySharedPreference.TRUCK_ID,
                 truckDriver.getTruckId(),
+                getContext());
+
+        MySharedPreference.putPref(MySharedPreference.TRUCK_LICENSE_ID,
+                truckDriver.getTruckDriverDriverLicenseId(),
                 getContext());
 
         MySharedPreference.putPref(MySharedPreference.TRUCK_ADDRESS,

@@ -1,19 +1,12 @@
 package com.example.bearboat.lslsapp.fragment;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,81 +15,95 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.bearboat.lslsapp.R;
+import com.example.bearboat.lslsapp.adapter.JobAdapter;
 import com.example.bearboat.lslsapp.manager.APIService;
+import com.example.bearboat.lslsapp.manager.ApiUtils;
+import com.example.bearboat.lslsapp.model.Job;
+import com.example.bearboat.lslsapp.tool.MySharedPreference;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback {
-    private static final String TAG = "MapsFragment";
-    private GoogleMap mMap;
-    private APIService mAPIService;
-    private double lat, lng;
-    private ProfileFragment mFragment;
-    private Bundle mBundle;
-    private SupportMapFragment mapFragment;
-    LocationManager locationManager;
-    String provider;
-    private Button btnSendLocation;
-    private Toast toast;
+import java.io.IOException;
+import java.util.List;
 
-    public static MapsFragment newInstance() {
-        MapsFragment fragment = new MapsFragment();
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class ShippingFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
+
+    private GoogleMap mMap;
+    private SupportMapFragment mapFragment;
+    private static final String TAG = "ShippingFragment";
+    private Toast toast;
+    private Button btnUpdate, btnDetail;
+
+
+    public static ShippingFragment newInstance() {
+        ShippingFragment fragment = new ShippingFragment();
         return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_shipping, container, false);
         initInstances(rootView);
         return rootView;
     }
 
     private void initInstances(View rootView) {
-//        mMapView = (MapView) rootView.findViewById(R.id.mapView);
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map_fragment);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
 
-        btnSendLocation = rootView.findViewById(R.id.btnSendLocation);
-        btnSendLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showToast("Location Sent!");
-            }
-        });
+        btnDetail = rootView.findViewById(R.id.btnDetail);
+        btnUpdate = rootView.findViewById(R.id.btnUpdate);
+
+        btnDetail.setOnClickListener(this);
+        btnUpdate.setOnClickListener(this);
     }
 
-
+    /*
+                 * Save Instance State Here
+                 */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // Save Instance State here
     }
 
+    /*
+     * Restore Instance State Here
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Bundle bundle = getArguments();
+
+        if (bundle != null) {
+        }
+
+        if (savedInstanceState != null) {
+            // Restore Instance State here
+        }
     }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
 
         LatLng chiangMai = new LatLng(18.78832, 98.98532);
         mMap.addMarker(new MarkerOptions().position(chiangMai).title("Current Location"));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(chiangMai, 14));
-
     }
 
     private void showToast(String text) {
@@ -105,5 +112,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                 text,
                 Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btnDetail){
+            showToast("Detail!!!");
+        } else if (view.getId() == R.id.btnUpdate){
+            showToast("Update!!!");
+        }
     }
 }
