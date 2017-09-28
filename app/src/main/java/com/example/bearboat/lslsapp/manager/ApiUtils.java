@@ -7,8 +7,6 @@ package com.example.bearboat.lslsapp.manager;
 public class ApiUtils {
     private ApiUtils() {
     }
-    //127.0.0.1
-    //192.168.1.46
 
     public static final String BASE_URL = "http://lsls.azurewebsites.net/api/";
 

@@ -6,15 +6,15 @@ package com.example.bearboat.lslsapp.manager;
 
 import com.example.bearboat.lslsapp.model.Job;
 import com.example.bearboat.lslsapp.model.LoginStatus;
+import com.example.bearboat.lslsapp.model.Shipping;
 import com.example.bearboat.lslsapp.model.TruckDriver;
+import com.example.bearboat.lslsapp.model.TruckLocation;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface APIService {
@@ -29,5 +29,14 @@ public interface APIService {
 
     @GET("jobassignment")
     Call<List<Job>> getJobsList(@Query("truckDriverId") String truckDriverId);
+
+    @GET("transportationinf")
+    Call<Shipping> getShippingInfo(@Query("shippingId") String shippingId);
+
+    @PUT("trucklocation")
+    Call<TruckLocation> updateTruckLocation(@Query("truckDriverId") String truckDriverId);
+
+    @PUT("transportationinf")
+    Call<Shipping> updateStatusShipping(@Query("shippingId") String shippingId);
 
 }
