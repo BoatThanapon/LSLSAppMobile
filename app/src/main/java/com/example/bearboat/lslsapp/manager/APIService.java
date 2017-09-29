@@ -19,24 +19,29 @@ import retrofit2.http.Query;
 
 public interface APIService {
 
-    // account/checklogin?username=driverA&password=driver
-    @GET("account/checklogin")
+    // Account/CheckTruckDriverLogin?username=driverA&password=driver
+    @GET("Account/CheckTruckDriverLogin")
     Call<LoginStatus> checkLogin(@Query("username") String username,
                                  @Query("password") String password);
 
-    @GET("truckdriver")
+    // TruckDriver/GetTruckDriverInfo?truckDriverId=2
+    @GET("TruckDriver/GetTruckDriverInfo")
     Call<TruckDriver> getTruckDriverInfo(@Query("truckDriverId") String truckDriverId);
 
-    @GET("jobassignment")
+    // JobAssignment/GetListJobAssignment?truckDriverId=1
+    @GET("JobAssignment/GetListJobAssignment")
     Call<List<Job>> getJobsList(@Query("truckDriverId") String truckDriverId);
 
-    @GET("transportationinf")
+    // TransportationInf/GetTransportationInf?shippingId=9
+    @GET("TransportationInf/GetTransportationInf")
     Call<Shipping> getShippingInfo(@Query("shippingId") String shippingId);
 
-    @PUT("trucklocation")
+    // TruckLocation/UpdateTruckLocation?truckDriverId=2
+    @PUT("TruckLocation/UpdateTruckLocation")
     Call<TruckLocation> updateTruckLocation(@Query("truckDriverId") String truckDriverId);
 
-    @PUT("transportationinf")
+    // TransportationInf/UpdateTransportationInf?shippingId=9
+    @PUT("TransportationInf/UpdateTransportationInf")
     Call<Shipping> updateStatusShipping(@Query("shippingId") String shippingId);
 
 }
