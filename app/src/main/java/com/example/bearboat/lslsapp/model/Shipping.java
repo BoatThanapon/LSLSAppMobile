@@ -26,18 +26,18 @@ public class Shipping {
     @SerializedName("employer")
     @Expose
     private String employer;
-    @SerializedName("recieverName")
+    @SerializedName("receiverName")
     @Expose
-    private String recieverName;
+    private String receiverName;
     @SerializedName("statusOfTransportation")
     @Expose
     private Boolean statusOfTransportation;
     @SerializedName("jobIsActive")
     @Expose
     private Boolean jobIsActive;
-    @SerializedName("recieveDateTime")
+    @SerializedName("receiverDateTime")
     @Expose
-    private Object recieveDateTime;
+    private Object receiverDateTime;
 
     public Integer getShippingId() {
         return shippingId;
@@ -95,12 +95,12 @@ public class Shipping {
         this.employer = employer;
     }
 
-    public String getRecieverName() {
-        return recieverName;
+    public String getReceiverName() {
+        return receiverName;
     }
 
-    public void setRecieverName(String recieverName) {
-        this.recieverName = recieverName;
+    public void setReceiverName(String receiverName) {
+        this.receiverName = receiverName;
     }
 
     public Boolean getStatusOfTransportation() {
@@ -120,11 +120,11 @@ public class Shipping {
     }
 
     public Object getRecieveDateTime() {
-        return recieveDateTime;
+        return receiverDateTime;
     }
 
-    public void setRecieveDateTime(Object recieveDateTime) {
-        this.recieveDateTime = recieveDateTime;
+    public void setReceiverDateTime(Object receiverDateTime) {
+        this.receiverDateTime = receiverDateTime;
     }
 
 }
