@@ -1,10 +1,19 @@
 <resources>
     <string name="app_name">LSLS</string>
 
+    <string name="project_name">Logical Supporting Logistic System</string>
+
     <!--Menu ViewPager-->
     <string name="tab_maps">Maps</string>
     <string name="tab_jobs">My Jobs</string>
     <string name="tab_profile">Profile</string>
+
+    <!--Action Bar-->
+    <string name="action_bar_location">Show Location</string>
+    <string name="action_bar_jobs">My Job</string>
+    <string name="action_bar_jobs_sub">Job Assignment</string>
+    <string name="action_bar_profile">Profile</string>
+
 
     <string name="double_back_exit">Press once again to exit!</string>
 

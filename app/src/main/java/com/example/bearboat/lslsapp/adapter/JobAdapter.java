@@ -9,17 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.akexorcist.googledirection.DirectionCallback;
-import com.akexorcist.googledirection.GoogleDirection;
-import com.akexorcist.googledirection.model.Direction;
 import com.example.bearboat.lslsapp.R;
 import com.example.bearboat.lslsapp.activity.MainActivity;
 import com.example.bearboat.lslsapp.fragment.ShippingFragment;
 import com.example.bearboat.lslsapp.model.Job;
-import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
 
@@ -28,6 +23,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
     private Context context;
     private List<Job> jobDaos;
     private ShippingFragment mFragment;
+    private Bundle mBundle;
 
     private static final String TAG = "JobAdapter";
 
@@ -72,9 +68,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
         public ViewHolder(View view) {
             super(view);
 
-            tvTitle = (TextView) view.findViewById(R.id.tvTitle);
-            tvSubTitle = (TextView) view.findViewById(R.id.tvSubTitle);
-            tvTime = (TextView) view.findViewById(R.id.tvTime);
+            tvTitle = view.findViewById(R.id.tvTitle);
+            tvSubTitle = view.findViewById(R.id.tvSubTitle);
+            tvTime = view.findViewById(R.id.tvTime);
             view.setOnClickListener(this);
         }
 
@@ -107,15 +103,15 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
         }
 
         private void fragmentJump(int adapterPosition) {
-                mFragment = new ShippingFragment();
+            mFragment = new ShippingFragment();
 
-//            mBundle = new Bundle();
-//            mBundle.putSerializable("VILLAGE", villageDaos.get(adapterPosition));
-//            mFragment.setArguments(mBundle);
+            mBundle = new Bundle();
+            mBundle.putSerializable("JOB_ASSIGNMENT", jobDaos.get(adapterPosition));
+            mFragment.setArguments(mBundle);
 
             FragmentManager fragmentManager = ((MainActivity) (context)).getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.add(R.id.contentContainer, mFragment);
+            fragmentTransaction.add(R.id.contentContainer2, mFragment);
 
             fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             fragmentTransaction.addToBackStack(null);

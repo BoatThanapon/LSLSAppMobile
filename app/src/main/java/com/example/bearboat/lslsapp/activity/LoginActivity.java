@@ -1,11 +1,13 @@
 package com.example.bearboat.lslsapp.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,6 +22,7 @@ import com.example.bearboat.lslsapp.manager.APIService;
 import com.example.bearboat.lslsapp.manager.ApiUtils;
 import com.example.bearboat.lslsapp.model.LoginStatus;
 import com.example.bearboat.lslsapp.tool.MySharedPreference;
+import com.example.bearboat.lslsapp.tool.UserInterfaceUtils;
 import com.example.bearboat.lslsapp.tool.Validator;
 
 import java.io.IOException;
@@ -35,11 +38,12 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     private TextView tvLoginTitle;
     private EditText etUsername, etPassword;
     private Button btnLogin;
-    private Toast toast;
     private RelativeLayout rlLogin;
 
     private ProgressDialog progressDialog;
     private APIService mAPIService;
+
+    private Context mContext;
 
     @Override
 
@@ -47,7 +51,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if (MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID, getApplicationContext()) != null){
+        if (MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID, getApplicationContext()) != null) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -60,12 +64,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     private void initInstance() {
 
+        mContext = getApplicationContext();
+
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         tvLoginTitle = (TextView) findViewById(R.id.tvLoginTitle);
         rlLogin = (RelativeLayout) findViewById(R.id.rlLogin);
 
+        tvLoginTitle.setText(Html.fromHtml("<b>L</b>ogical <b>S</b>upporting <b>L</b>ogistic <b>S</b>ystem"));
     }
 
 
@@ -146,14 +153,6 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
     }
 
-    private void showToast(String text) {
-
-        toast = Toast.makeText(getApplicationContext(),
-                text,
-                Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
     public void showProgressDialog() {
 
         progressDialog = new ProgressDialog(this);
@@ -178,16 +177,16 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
             if (Validator.isStringEmpty(username)
                     && Validator.isStringEmpty(password)) {
 
-                showToast("Username or Password is required");
+                UserInterfaceUtils.showToast(mContext, "Username or Password is required");
 
             } else {
                 if (Validator.isUsernameValid(username)) {
 
-                    showToast("Username is invalid");
+                    UserInterfaceUtils.showToast(mContext, "Username is invalid");
 
                 } else if (Validator.isPasswordValid(password)) {
 
-                    showToast("Password is invalid");
+                    UserInterfaceUtils.showToast(mContext, "Password is invalid");
 
                 } else {
 
@@ -195,7 +194,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 }
             }
 
-        } else if (view.getId() == R.id.tvLoginTitle){
+        } else if (view.getId() == R.id.tvLoginTitle) {
             etUsername.setText("drivera");
             etPassword.setText("driver");
         }

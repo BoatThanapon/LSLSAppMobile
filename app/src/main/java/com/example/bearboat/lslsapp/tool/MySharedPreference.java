@@ -7,11 +7,6 @@ import android.preference.PreferenceManager;
 public class MySharedPreference {
 
     public static final String TRUCK_DRIVER_ID = "TRUCK_DRIVER_ID";
-    public static final String TRUCK_ID = "TRUCK_ID";
-    public static final String TRUCK_NAME = "TRUCK_NAME";
-    public static final String TRUCK_LICENSE_ID = "TRUCK_LICENSE_ID";
-    public static final String TRUCK_ADDRESS = "TRUCK_ADDRESS";
-
 
     public static void putPref(String key, String value, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);

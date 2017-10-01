@@ -1,5 +1,6 @@
 package com.example.bearboat.lslsapp.fragment;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import com.example.bearboat.lslsapp.manager.APIService;
 import com.example.bearboat.lslsapp.manager.ApiUtils;
 import com.example.bearboat.lslsapp.model.Job;
 import com.example.bearboat.lslsapp.tool.MySharedPreference;
+import com.example.bearboat.lslsapp.tool.UserInterfaceUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,8 +41,8 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
     private static final String TAG = "ShippingFragment";
-    private Toast toast;
-    private Button btnUpdate, btnDetail;
+    private FloatingActionButton fabDetail, fabUpdate;
+    private Job job;
 
 
     public static ShippingFragment newInstance() {
@@ -52,22 +54,28 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_shipping, container, false);
+
+        getActivity().setTitle(getResources().getString(R.string.action_bar_jobs_sub));
+
         initInstances(rootView);
         return rootView;
     }
 
     private void initInstances(View rootView) {
 
+        Bundle mBundle = getArguments();
+        job = (Job) mBundle.getSerializable("JOB_ASSIGNMENT");
+
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map_fragment);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
         }
 
-        btnDetail = rootView.findViewById(R.id.btnDetail);
-        btnUpdate = rootView.findViewById(R.id.btnUpdate);
+        fabDetail = rootView.findViewById(R.id.fabDetail);
+        fabUpdate = rootView.findViewById(R.id.fabUpdate);
 
-        btnDetail.setOnClickListener(this);
-        btnUpdate.setOnClickListener(this);
+        fabDetail.setOnClickListener(this);
+        fabUpdate.setOnClickListener(this);
     }
 
     /*
@@ -101,25 +109,19 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
 
         mMap = googleMap;
 
-        LatLng chiangMai = new LatLng(18.78832, 98.98532);
+        LatLng chiangMai = new LatLng(job.getLatitudeDesJob(), job.getLongitudeDesJob());
         mMap.addMarker(new MarkerOptions().position(chiangMai).title("Current Location"));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(chiangMai, 14));
     }
 
-    private void showToast(String text) {
-
-        toast = Toast.makeText(getContext(),
-                text,
-                Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.btnDetail){
-            showToast("Detail!!!");
-        } else if (view.getId() == R.id.btnUpdate){
-            showToast("Update!!!");
+
+        if (view.getId() == R.id.fabDetail) {
+            UserInterfaceUtils.showToast(getContext(), "Detail!!!");
+
+        } else if (view.getId() == R.id.fabUpdate) {
+            UserInterfaceUtils.showToast(getContext(), "Update!!!");
         }
     }
 }

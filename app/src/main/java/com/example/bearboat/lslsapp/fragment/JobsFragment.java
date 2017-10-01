@@ -7,10 +7,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.DateSorter;
 import android.widget.TextView;
 
 import com.example.bearboat.lslsapp.R;
@@ -18,17 +20,16 @@ import com.example.bearboat.lslsapp.adapter.JobAdapter;
 import com.example.bearboat.lslsapp.manager.APIService;
 import com.example.bearboat.lslsapp.manager.ApiUtils;
 import com.example.bearboat.lslsapp.model.Job;
-import com.example.bearboat.lslsapp.model.TruckDriver;
 import com.example.bearboat.lslsapp.tool.MySharedPreference;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static android.content.ContentValues.TAG;
 
 public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -38,6 +39,7 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private JobAdapter adapter;
     private List<Job> jobsList;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private String truckDriverId;
 
     public static JobsFragment newInstance() {
         JobsFragment fragment = new JobsFragment();
@@ -48,6 +50,9 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_jobs, container, false);
+
+        getActivity().setTitle(getResources().getString(R.string.action_bar_jobs));
+
         initInstances(rootView);
         return rootView;
     }
@@ -63,8 +68,7 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
                     jobsList = response.body();
 
-                    adapter = new JobAdapter(jobsList, getActivity());
-                    recyclerView.setAdapter(adapter);
+                    onSuccess(jobsList);
 
                 } else {
 
@@ -83,16 +87,33 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         });
     }
 
+    private void onSuccess(List<Job> jobsList) {
+
+        Collections.sort(jobsList, new Comparator<Job>() {
+            public int compare(Job o1, Job o2) {
+                if (o1.getJobAssignmentDate() == null || o2.getJobAssignmentDate() == null)
+                    return 0;
+                return o1.getJobAssignmentDate().compareTo(o2.getJobAssignmentDate());
+            }
+        });
+
+        adapter = new JobAdapter(jobsList, getActivity());
+        recyclerView.setAdapter(adapter);
+    }
+
     private void initInstances(View rootView) {
-        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
+        swipeRefreshLayout = rootView.findViewById(R.id.refresh);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        TextView tvProjectName = rootView.findViewById(R.id.tvProjectName);
+        tvProjectName.setText(Html.fromHtml("<b>L</b>ogical <b>S</b>upporting <b>L</b>ogistic <b>S</b>ystem"));
+
+        recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setHasFixedSize(true);
 
-        String truckDriverId = MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID,
+        truckDriverId = MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID,
                 getContext());
 
         getJobsList(truckDriverId);
@@ -125,13 +146,18 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onRefresh() {
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                getJobsList(truckDriverId);
                 swipeRefreshLayout.setRefreshing(false);
             }
-        }, 2000);
+        }, 1500);
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

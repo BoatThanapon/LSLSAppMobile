@@ -17,6 +17,7 @@ import com.example.bearboat.lslsapp.manager.APIService;
 import com.example.bearboat.lslsapp.manager.ApiUtils;
 import com.example.bearboat.lslsapp.model.TruckDriver;
 import com.example.bearboat.lslsapp.tool.MySharedPreference;
+import com.example.bearboat.lslsapp.tool.UserInterfaceUtils;
 
 import java.io.IOException;
 
@@ -42,6 +43,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        getActivity().setTitle(getResources().getString(R.string.action_bar_profile));
+
         initInstances(rootView);
         initListener();
         return rootView;
@@ -57,21 +61,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         String truckDriverId = MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID,
                 getContext());
 
-        if (MySharedPreference.getPref(MySharedPreference.TRUCK_ID, getContext()) != null &&
-                MySharedPreference.getPref(MySharedPreference.TRUCK_NAME, getContext()) != null &&
-                MySharedPreference.getPref(MySharedPreference.TRUCK_ADDRESS, getContext()) != null)
-        {
-            tvTruckId.setText(MySharedPreference.getPref(MySharedPreference.TRUCK_ID, getContext()));
-            tvName.setText(MySharedPreference.getPref(MySharedPreference.TRUCK_NAME, getContext()));
-            tvAddress.setText("Your Driving License: " +
-                    MySharedPreference.getPref(MySharedPreference.TRUCK_LICENSE_ID, getContext())
-                    + "\n" + MySharedPreference.getPref(MySharedPreference.TRUCK_ADDRESS, getContext()));
-
-        } else {
-
             showProgressDialog();
             getTruckDriverInfo(truckDriverId);
-        }
 
     }
 
@@ -144,6 +135,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
             Intent intent = new Intent(getContext(), LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+
+            UserInterfaceUtils.showToast(getContext(), "Logged out successfully!");
         }
     }
 
@@ -154,22 +147,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         tvAddress.setText("Your Driving License: " +
                 truckDriver.getTruckDriverDriverLicenseId()
                 + "\n" + truckDriver.getTruckDriverAddress());
-
-        MySharedPreference.putPref(MySharedPreference.TRUCK_NAME,
-                truckDriver.getTruckDriverFullname(),
-                getContext());
-
-        MySharedPreference.putPref(MySharedPreference.TRUCK_ID,
-                truckDriver.getTruckId(),
-                getContext());
-
-        MySharedPreference.putPref(MySharedPreference.TRUCK_LICENSE_ID,
-                truckDriver.getTruckDriverDriverLicenseId(),
-                getContext());
-
-        MySharedPreference.putPref(MySharedPreference.TRUCK_ADDRESS,
-                truckDriver.getTruckDriverAddress(),
-                getContext());
 
         dismissProgressDialog();
     }

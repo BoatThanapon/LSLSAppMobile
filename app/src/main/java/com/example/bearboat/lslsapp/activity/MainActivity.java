@@ -3,18 +3,17 @@ package com.example.bearboat.lslsapp.activity;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.example.bearboat.lslsapp.R;
+import com.example.bearboat.lslsapp.adapter.SectionPageAdapter;
 import com.example.bearboat.lslsapp.fragment.JobsFragment;
 import com.example.bearboat.lslsapp.fragment.MapsFragment;
 import com.example.bearboat.lslsapp.fragment.ProfileFragment;
+import com.example.bearboat.lslsapp.tool.UserInterfaceUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,50 +21,91 @@ public class MainActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private boolean doubleBackToExitPressedOnce = false;
+    private BottomNavigationView bottomNavigationView;
+    private MenuItem prevMenuItem;
+    MapsFragment mapsFragment;
+    JobsFragment jobsFragment;
+    ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initBottomNavigation();
+        initViewPager();
+        setupViewPager();
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView)
+    }
+
+    private void setupViewPager() {
+        mapsFragment = new MapsFragment();
+        jobsFragment = new JobsFragment();
+        profileFragment = new ProfileFragment();
+
+        SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
+
+        adapter.addFragment(mapsFragment);
+        adapter.addFragment(jobsFragment);
+        adapter.addFragment(profileFragment);
+
+        viewPager.setAdapter(adapter);
+    }
+
+    private void initBottomNavigation() {
+
+        bottomNavigationView = (BottomNavigationView)
                 findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                        Fragment selectedFragment = null;
                         switch (item.getItemId()) {
                             case R.id.action_maps:
-                                selectedFragment = MapsFragment.newInstance();
+                                viewPager.setCurrentItem(0);
                                 break;
 
                             case R.id.action_jobs:
-                                selectedFragment = JobsFragment.newInstance();
+                                viewPager.setCurrentItem(1);
                                 break;
 
                             case R.id.action_profile:
-                                selectedFragment = ProfileFragment.newInstance();
+                                viewPager.setCurrentItem(2);
                                 break;
 
                         }
-                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.contentContainer, selectedFragment);
-                        transaction.commit();
                         return true;
                     }
                 });
+    }
 
-        //Manually displaying the first fragment - one time only
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.contentContainer, MapsFragment.newInstance());
-        transaction.commit();
+    private void initViewPager() {
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        //Used to select an item programmatically
-        //bottomNavigationView.getMenu().getItem(2).setChecked(true);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                } else {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -75,7 +115,9 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().popBackStack();
         } else if (!doubleBackToExitPressedOnce) {
             this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, R.string.double_back_exit, Toast.LENGTH_SHORT).show();
+
+            UserInterfaceUtils.showToast(getApplicationContext(),
+                    getResources().getString(R.string.double_back_exit));
 
             new Handler().postDelayed(new Runnable() {
 

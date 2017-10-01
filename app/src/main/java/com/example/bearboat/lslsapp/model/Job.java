@@ -3,7 +3,9 @@ package com.example.bearboat.lslsapp.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Job {
+import java.io.Serializable;
+
+public class Job implements Serializable {
 
     @SerializedName("jobAssignmentId")
     @Expose
@@ -148,5 +150,5 @@ public class Job {
     public void setJobAssignmentStatus(Boolean jobAssignmentStatus) {
         this.jobAssignmentStatus = jobAssignmentStatus;
     }
-
 }
+
