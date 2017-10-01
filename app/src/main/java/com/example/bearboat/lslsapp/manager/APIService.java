@@ -49,6 +49,6 @@ public interface APIService {
     //For Update status by statusOfTransportation in Shipping class = true(completed) or false(not complete)
     // TransportationInf/UpdateTransportationInf?shippingId=9
     @PUT("TransportationInf/UpdateTransportationInf")
-    Call<Shipping> updateStatusShipping(@Query("shippingId") String shippingId);
+    Call<Boolean> updateStatusShipping(@Query("shippingId") String shippingId, @Body Shipping shipping);
 
 }

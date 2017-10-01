@@ -14,7 +14,6 @@
     <string name="action_bar_jobs_sub">Job Assignment</string>
     <string name="action_bar_profile">Profile</string>
 
-
     <string name="double_back_exit">Press once again to exit!</string>
 
     <!--Login-->
@@ -22,5 +21,13 @@
     <string name="invalid_credential">"An invalid username or password was entered!</string>
 
     <string name="google_map_key">AIzaSyC8eTxK26oSiRF8foiQxkxXXWIWwUq_uAI</string>
+
+    <string name="title_shipping_id"><![CDATA[<b>Shipping ID:</b>]]> %1$s</string>
+    <string name="title_date_transport"><![CDATA[<br><b>Date of Transport:</b> ]]> %1$s</string>
+    <string name="title_product_name"><![CDATA[<br><b>Product Name:</b> ]]> %1$s</string>
+    <string name="title_start_point"><![CDATA[<br><b>Start Point:</b> ]]> %1$s</string>
+    <string name="title_destination"><![CDATA[<br><b>Destination:</b> ]]> %1$s</string>
+    <string name="title_employer"><![CDATA[<br><b>Employer:</b> ]]> %1$s</string>
+    <string name="title_status"><![CDATA[<br><b>Status:</b> ]]> %1$s</string>
 
 </resources>
