@@ -38,6 +38,9 @@ public class Shipping {
     @SerializedName("receiverDateTime")
     @Expose
     private Object receiverDateTime;
+    @SerializedName("ShippingDocImage")
+    @Expose
+    private String shippingDocImage;
 
     public Integer getShippingId() {
         return shippingId;
@@ -127,4 +130,11 @@ public class Shipping {
         this.receiverDateTime = receiverDateTime;
     }
 
+    public String getShippingDocImage() {
+        return shippingDocImage;
+    }
+
+    public void setShippingDocImage(String shippingDocImage) {
+        this.shippingDocImage = shippingDocImage;
+    }
 }
