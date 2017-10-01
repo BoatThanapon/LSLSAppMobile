@@ -13,6 +13,7 @@ import com.example.bearboat.lslsapp.model.TruckLocation;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
@@ -43,7 +44,7 @@ public interface APIService {
     //For Update TruckLocation
     // TruckLocation/UpdateTruckLocation?truckDriverId=2
     @PUT("TruckLocation/UpdateTruckLocation")
-    Call<TruckLocation> updateTruckLocation(@Query("truckDriverId") String truckDriverId);
+    Call<Boolean> updateTruckLocation(@Query("truckDriverId") String truckDriverId, @Body TruckLocation truckLocation);
 
     //For Update status by statusOfTransportation in Shipping class = true(completed) or false(not complete)
     // TransportationInf/UpdateTransportationInf?shippingId=9
