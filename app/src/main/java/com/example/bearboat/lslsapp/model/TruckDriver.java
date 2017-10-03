@@ -3,7 +3,9 @@ package com.example.bearboat.lslsapp.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TruckDriver {
+import java.io.Serializable;
+
+public class TruckDriver implements Serializable{
 
     @SerializedName("truckDriverId")
     @Expose

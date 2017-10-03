@@ -46,39 +46,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MapsFragment extends Fragment implements OnMapReadyCallback,
-        GoogleMap.OnInfoWindowClickListener,
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+import static com.example.bearboat.lslsapp.tool.UserInterfaceUtils.showToast;
+
+public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+
     private static final String TAG = "MapsFragment";
     private GoogleMap mMap;
     private APIService mAPIService;
-    private double lat, lng;
-    private ProfileFragment mFragment;
-    private Bundle mBundle;
-    private SupportMapFragment mapFragment;
-    LocationManager locationManager;
-    String provider;
-    private Button btnSendLocation;
-    Marker marker;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
-    LatLng latLng;
-
-    public static MapsFragment newInstance() {
-        MapsFragment fragment = new MapsFragment();
-        return fragment;
-    }
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private Marker mCurrLocationMarker;
+    private LocationRequest mLocationRequest;
+    private LatLng latLng;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
-
-        getActivity().setTitle(getResources().getString(R.string.action_bar_location));
 
         initInstances(rootView);
         return rootView;
@@ -92,19 +77,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map_fragment);
         mapFragment.getMapAsync(this);
-
-    }
-
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save Instance State here
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
     }
 
@@ -168,7 +140,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         Log.i(TAG, "onInfoWindowClick: " + latLng.latitude + " : " + latLng.longitude);
 
         shareLocation(latLng);
-
     }
 
     private void shareLocation(LatLng latLng) {
@@ -190,8 +161,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                     onSuccess(response.body());
 
                 } else {
-                    UserInterfaceUtils.showToast(getContext(), "Location send failed!");
 
+                    showToast(getContext(), getString(R.string.on_failure));
                     try {
                         Log.i(TAG, "onResponse: " + response.errorBody().string());
                     } catch (IOException e) {
@@ -202,7 +173,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
             @Override
             public void onFailure(Call<Boolean> call, Throwable t) {
-                UserInterfaceUtils.showToast(getContext(), "Location send failed!");
+                showToast(getContext(), getString(R.string.on_failure));
                 Log.i(TAG, "onFailure: " + t.toString());
             }
         });

@@ -1,0 +1,12 @@
+<resources>
+    <string name="login_title">LSLS Login</string>
+
+    <string name="log_in_loading">Logging in ...</string>
+
+    <string name="empty_username_password">Username or Password is required</string>
+
+    <string name="invalid_username">Username is invalid</string>
+    <string name="invalid_password">Password is invalid</string>
+
+    <string name="invalid_credential">"An invalid username or password was entered!</string>
+</resources>

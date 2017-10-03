@@ -3,6 +3,7 @@ package com.example.bearboat.lslsapp.fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,25 +27,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
+import static com.example.bearboat.lslsapp.tool.UserInterfaceUtils.showToast;
 
 public class ProfileFragment extends Fragment implements View.OnClickListener{
 
     private Button btnLogout;
+    private ProgressDialog progressDialog;
     private TextView tvName, tvTruckId, tvAddress;
     private APIService mAPIService;
-    private ProgressDialog progressDialog;
-
-    public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
-    }
+    private TruckDriver truckDriver;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-
-        getActivity().setTitle(getResources().getString(R.string.action_bar_profile));
 
         initInstances(rootView);
         initListener();
@@ -61,25 +57,25 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
         String truckDriverId = MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID,
                 getContext());
 
-            showProgressDialog();
             getTruckDriverInfo(truckDriverId);
-
     }
 
     private void getTruckDriverInfo(String truckDriverId) {
 
         mAPIService = ApiUtils.getAPIService();
+        showProgressDialog();
         mAPIService.getTruckDriverInfo(truckDriverId).enqueue(new Callback<TruckDriver>() {
             @Override
             public void onResponse(Call<TruckDriver> call, Response<TruckDriver> response) {
 
                 if (response.isSuccessful()) {
 
-                    TruckDriver truckDriver = response.body();
+                    truckDriver = response.body();
                     onSuccess(truckDriver);
 
                 } else {
 
+                    showToast(getContext(), getString(R.string.on_failure));
                     try {
                         Log.i(TAG, "onResponse: " + response.errorBody().string());
                     } catch (IOException e) {
@@ -90,6 +86,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
             @Override
             public void onFailure(Call<TruckDriver> call, Throwable t) {
+                showToast(getContext(), getString(R.string.on_failure));
                 Log.i(TAG, "onFailure: " + t.toString());
             }
         });
@@ -107,7 +104,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        // Save Instance State here
+//        outState.putSerializable("TRUCK_DRIVER", truckDriver);
     }
 
     /*

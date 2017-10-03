@@ -80,26 +80,6 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.ViewHolder> {
 
             fragmentJump(getAdapterPosition());
 
-//            LatLng origin = new LatLng(jobDaos.get(getAdapterPosition()).getLatitudeStartJob(),
-//                    jobDaos.get(getAdapterPosition()).getLatitudeStartJob());
-//
-//            LatLng destination = new LatLng(jobDaos.get(getAdapterPosition()).getLatitudeDesJob(),
-//                    jobDaos.get(getAdapterPosition()).getLongitudeDesJob());
-//
-//            GoogleDirection.withServerKey("AIzaSyBJX8xmIoID7XSDstbHieRweoU9ArTxvUo")
-//                    .from(origin)
-//                    .to(destination)
-//                    .execute(new DirectionCallback() {
-//                        @Override
-//                        public void onDirectionSuccess(Direction direction, String rawBody) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onDirectionFailure(Throwable t) {
-//
-//                        }
-//                    });
         }
 
         private void fragmentJump(int adapterPosition) {

@@ -6,6 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,6 +24,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.bearboat.lslsapp.R;
+import com.example.bearboat.lslsapp.activity.MainActivity;
 import com.example.bearboat.lslsapp.adapter.JobAdapter;
 import com.example.bearboat.lslsapp.manager.APIService;
 import com.example.bearboat.lslsapp.manager.ApiUtils;
@@ -40,32 +43,30 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.bearboat.lslsapp.tool.UserInterfaceUtils.showToast;
+
 public class ShippingFragment extends Fragment implements OnMapReadyCallback, View.OnClickListener {
 
+    private static final String TAG = "ShippingFragment";
+
+    private Job job;
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
-    private static final String TAG = "ShippingFragment";
     private FloatingActionButton fabDetail, fabUpdate;
-    private Job job;
+    private Shipping shipping;
     private APIService mAPIService;
     private AlertDialog.Builder builder;
-    private Shipping shipping;
-
-    public static ShippingFragment newInstance() {
-        ShippingFragment fragment = new ShippingFragment();
-        return fragment;
-    }
+    private SweetAlertDialog pDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_shipping, container, false);
-
-        getActivity().setTitle(getResources().getString(R.string.action_bar_jobs_sub));
 
         initInstances(rootView);
         return rootView;
@@ -73,12 +74,13 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
 
     private void initInstances(View rootView) {
 
+        getActivity().setTitle(getResources().getString(R.string.action_bar_jobs_sub));
+        builder = new AlertDialog.Builder(getContext());
+
         Bundle mBundle = getArguments();
         job = (Job) mBundle.getSerializable("JOB_ASSIGNMENT");
 
-        builder = new AlertDialog.Builder(getContext());
-
-        Log.i(TAG, "initInstances: " + job.getShippingId());
+        getShippingDetail();
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map_fragment);
         if (mapFragment != null) {
@@ -92,32 +94,6 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
         fabUpdate.setOnClickListener(this);
     }
 
-    /*
-                 * Save Instance State Here
-                 */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save Instance State here
-    }
-
-    /*
-     * Restore Instance State Here
-     */
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Bundle bundle = getArguments();
-
-        if (bundle != null) {
-        }
-
-        if (savedInstanceState != null) {
-            // Restore Instance State here
-        }
-    }
-
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
@@ -126,18 +102,6 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
         LatLng chiangMai = new LatLng(job.getLatitudeDesJob(), job.getLongitudeDesJob());
         mMap.addMarker(new MarkerOptions().position(chiangMai).title("Current Location"));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(chiangMai, 14));
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        if (view.getId() == R.id.fabDetail) {
-
-            getShippingDetail();
-
-        } else if (view.getId() == R.id.fabUpdate) {
-            showUpdateDialog();
-        }
     }
 
     private void showUpdateDialog() {
@@ -166,19 +130,23 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
 
         mAPIService = ApiUtils.getAPIService();
 
-        shipping = new Shipping();
+        shipping.setStatusOfTransportation(true);
         shipping.setReceiverName(receiverName);
+//        shipping.setShippingDocImage();
 
+        showProgressDialog();
         mAPIService.updateStatusShipping(job.getShippingId().toString(), shipping).enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {
-                if (response.isSuccessful()) {
 
+                if (response.isSuccessful()) {
                     onUpdateStatusSuccess(response.body());
 
                 } else {
-                    UserInterfaceUtils.showToast(getContext(), "Failed!");
 
+                    getShippingDetail();
+                    dismissProgressDialog();
+                    showToast(getContext(), getString(R.string.on_failure));
                     try {
                         Log.i(TAG, "onResponse: " + response.errorBody().string());
                     } catch (IOException e) {
@@ -189,7 +157,9 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
 
             @Override
             public void onFailure(Call<Boolean> call, Throwable t) {
-                UserInterfaceUtils.showToast(getContext(), "Failed!");
+                getShippingDetail();
+                dismissProgressDialog();
+                showToast(getContext(), getString(R.string.on_failure));
                 Log.i(TAG, "onFailure: " + t.toString());
             }
         });
@@ -197,22 +167,32 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
 
     private void onUpdateStatusSuccess(Boolean isSuccess) {
 
-        if (isSuccess) UserInterfaceUtils.showToast(getContext(), "Updated successfully!");
-        else UserInterfaceUtils.showToast(getContext(), "Failed!");
+        if (isSuccess) {
+            dismissProgressDialog();
+            UserInterfaceUtils.showToast(getContext(), "Updated successfully!");
+            fragmentJump();
+
+        } else {
+            getShippingDetail();
+            dismissProgressDialog();
+            UserInterfaceUtils.showToast(getContext(), getString(R.string.on_failure));
+        }
     }
 
     private void getShippingDetail() {
         mAPIService = ApiUtils.getAPIService();
+
+        showProgressDialog();
         mAPIService.getShippingInfo(String.valueOf(job.getShippingId())).enqueue(new Callback<Shipping>() {
             @Override
             public void onResponse(Call<Shipping> call, Response<Shipping> response) {
-                if (response.isSuccessful()) {
 
+                if (response.isSuccessful()) {
                     onShippingDetailSuccess(response.body());
 
                 } else {
-                    UserInterfaceUtils.showToast(getContext(), "Failed!");
-
+                    dismissProgressDialog();
+                    showToast(getContext(), getString(R.string.on_failure));
                     try {
                         Log.i(TAG, "onResponse: " + response.errorBody().string());
                     } catch (IOException e) {
@@ -223,13 +203,38 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
 
             @Override
             public void onFailure(Call<Shipping> call, Throwable t) {
-                UserInterfaceUtils.showToast(getContext(), "Failed!");
+
+                dismissProgressDialog();
+                showToast(getContext(), getString(R.string.on_failure));
                 Log.i(TAG, "onFailure: " + t.toString());
             }
         });
     }
 
     private void onShippingDetailSuccess(Shipping shipping) {
+
+        this.shipping = shipping;
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                dismissProgressDialog();
+            }
+        }, 1000);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        if (view.getId() == R.id.fabDetail) {
+            showShippingDetialDialog();
+
+        } else if (view.getId() == R.id.fabUpdate) {
+            showUpdateDialog();
+        }
+    }
+
+    private void showShippingDetialDialog() {
 
         String statusShipping = shipping.getStatusOfTransportation() ? "DONE" : "In Process";
 
@@ -252,5 +257,28 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
             }
         });
         builder.show();
+    }
+
+    private void fragmentJump() {
+        Fragment mFragment = new JobsFragment();
+
+        FragmentManager fragmentManager = ((MainActivity) (getContext())).getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.contentContainer2, mFragment);
+
+        fragmentTransaction.commit();
+    }
+
+    private void showProgressDialog() {
+        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.setTitleText(getString(R.string.loading));
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (pDialog != null && pDialog.isShowing()) {
+            pDialog.dismiss();
+        }
     }
 }

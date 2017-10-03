@@ -16,10 +16,6 @@
 
     <string name="double_back_exit">Press once again to exit!</string>
 
-    <!--Login-->
-    <string name="login_title">LSLS Login</string>
-    <string name="invalid_credential">"An invalid username or password was entered!</string>
-
     <string name="google_map_key">AIzaSyC8eTxK26oSiRF8foiQxkxXXWIWwUq_uAI</string>
 
     <string name="title_shipping_id"><![CDATA[<b>Shipping ID:</b>]]> %1$s</string>
@@ -29,5 +25,10 @@
     <string name="title_destination"><![CDATA[<br><b>Destination:</b> ]]> %1$s</string>
     <string name="title_employer"><![CDATA[<br><b>Employer:</b> ]]> %1$s</string>
     <string name="title_status"><![CDATA[<br><b>Status:</b> ]]> %1$s</string>
+
+    <string name="connection_failed">Check Your Internet Connection!</string>
+    <string name="on_failure">Something went wrong!</string>
+
+    <string name="loading">Loading ...</string>
 
 </resources>

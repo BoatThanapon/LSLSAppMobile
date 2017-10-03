@@ -27,78 +27,31 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.example.bearboat.lslsapp.tool.UserInterfaceUtils.showToast;
+
 public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "JobsFragment";
+
     private RecyclerView recyclerView;
-    private APIService mAPIService;
-    private JobAdapter adapter;
-    private List<Job> jobsList;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String truckDriverId;
-
-    public static JobsFragment newInstance() {
-        JobsFragment fragment = new JobsFragment();
-        return fragment;
-    }
+    private JobAdapter adapter;
+    private APIService mAPIService;
+    private SweetAlertDialog pDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_jobs, container, false);
 
-        getActivity().setTitle(getResources().getString(R.string.action_bar_jobs));
-
         initInstances(rootView);
         return rootView;
-    }
-
-    private void getJobsList(String truckDriverId) {
-
-        mAPIService = ApiUtils.getAPIService();
-        mAPIService.getJobsList(truckDriverId).enqueue(new Callback<List<Job>>() {
-            @Override
-            public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
-
-                if (response.isSuccessful()) {
-
-                    jobsList = response.body();
-
-                    onSuccess(jobsList);
-
-                } else {
-
-                    try {
-                        Log.i(TAG, "onResponse: " + response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Job>> call, Throwable t) {
-                Log.i(TAG, "onFailure: " + t.toString());
-            }
-        });
-    }
-
-    private void onSuccess(List<Job> jobsList) {
-
-        Collections.sort(jobsList, new Comparator<Job>() {
-            public int compare(Job o1, Job o2) {
-                if (o1.getJobAssignmentDate() == null || o2.getJobAssignmentDate() == null)
-                    return 0;
-                return o1.getJobAssignmentDate().compareTo(o2.getJobAssignmentDate());
-            }
-        });
-
-        adapter = new JobAdapter(jobsList, getActivity());
-        recyclerView.setAdapter(adapter);
     }
 
     private void initInstances(View rootView) {
@@ -116,32 +69,56 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         truckDriverId = MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID,
                 getContext());
 
-        getJobsList(truckDriverId);
+        getJobsList(truckDriverId, false);
     }
 
-    /*
-                 * Save Instance State Here
-                 */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // Save Instance State here
+    private void getJobsList(String truckDriverId, Boolean isPullToRefresh) {
+
+        mAPIService = ApiUtils.getAPIService();
+        if (!isPullToRefresh) showProgressDialog();
+
+        mAPIService.getJobsList(truckDriverId).enqueue(new Callback<List<Job>>() {
+            @Override
+            public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
+
+                if (response.isSuccessful()) {
+
+                    onSuccess(response.body());
+
+                } else {
+
+                    dismissProgressDialog();
+                    showToast(getContext(), getString(R.string.on_failure));
+                    try {
+                        Log.i(TAG, "onResponse: " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Job>> call, Throwable t) {
+                dismissProgressDialog();
+                showToast(getContext(), getString(R.string.on_failure));
+                Log.i(TAG, "onFailure: " + t.toString());
+            }
+        });
     }
 
-    /*
-     * Restore Instance State Here
-     */
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Bundle bundle = getArguments();
+    private void onSuccess(List<Job> jobsList) {
 
-        if (bundle != null) {
-        }
+        Collections.sort(jobsList, new Comparator<Job>() {
+            public int compare(Job o1, Job o2) {
+                if (o1.getJobAssignmentDate() == null || o2.getJobAssignmentDate() == null)
+                    return 0;
+                return o1.getJobAssignmentDate().compareTo(o2.getJobAssignmentDate());
+            }
+        });
 
-        if (savedInstanceState != null) {
-            // Restore Instance State here
-        }
+        adapter = new JobAdapter(jobsList, getActivity());
+        recyclerView.setAdapter(adapter);
+        dismissProgressDialog();
     }
 
     @Override
@@ -150,14 +127,22 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getJobsList(truckDriverId);
+                getJobsList(truckDriverId, true);
                 swipeRefreshLayout.setRefreshing(false);
             }
         }, 1500);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void showProgressDialog() {
+        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.setTitleText(getString(R.string.loading));
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (pDialog != null && pDialog.isShowing()) {
+            pDialog.dismiss();
+        }
     }
 }

@@ -6,6 +6,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.bearboat.lslsapp.R;
@@ -20,12 +21,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
     private ViewPager viewPager;
-    private boolean doubleBackToExitPressedOnce = false;
-    private BottomNavigationView bottomNavigationView;
     private MenuItem prevMenuItem;
-    MapsFragment mapsFragment;
-    JobsFragment jobsFragment;
-    ProfileFragment profileFragment;
+    private MapsFragment mapsFragment;
+    private JobsFragment jobsFragment;
+    private ProfileFragment profileFragment;
+    private BottomNavigationView bottomNavigationView;
+    private boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,21 +36,7 @@ public class MainActivity extends AppCompatActivity {
         initBottomNavigation();
         initViewPager();
         setupViewPager();
-
-    }
-
-    private void setupViewPager() {
-        mapsFragment = new MapsFragment();
-        jobsFragment = new JobsFragment();
-        profileFragment = new ProfileFragment();
-
-        SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
-
-        adapter.addFragment(mapsFragment);
-        adapter.addFragment(jobsFragment);
-        adapter.addFragment(profileFragment);
-
-        viewPager.setAdapter(adapter);
+        initInstance();
     }
 
     private void initBottomNavigation() {
@@ -91,6 +78,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                switch (position){
+                    case 0: if (getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.action_bar_location);
+                        break;
+                    case 1: if (getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.action_bar_jobs);
+                        break;
+                    case 2: if (getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.action_bar_profile);
+                        break;
+                }
                 if (prevMenuItem != null) {
                     prevMenuItem.setChecked(false);
                 } else {
@@ -106,6 +101,26 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setupViewPager() {
+        mapsFragment = new MapsFragment();
+        jobsFragment = new JobsFragment();
+        profileFragment = new ProfileFragment();
+
+        SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
+
+        adapter.addFragment(mapsFragment);
+        adapter.addFragment(jobsFragment);
+        adapter.addFragment(profileFragment);
+
+        viewPager.setAdapter(adapter);
+    }
+
+
+    private void initInstance() {
+
+        getSupportActionBar().setTitle(R.string.action_bar_location);
     }
 
     @Override
@@ -130,5 +145,10 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
             return;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
