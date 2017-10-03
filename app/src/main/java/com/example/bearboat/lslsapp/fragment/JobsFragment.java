@@ -23,6 +23,7 @@ import com.example.bearboat.lslsapp.model.Job;
 import com.example.bearboat.lslsapp.tool.MySharedPreference;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -108,6 +109,15 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private void onSuccess(List<Job> jobsList) {
 
+        List<Job> filteredJob = new ArrayList<Job>();
+
+        // sort by status
+        for (Job each : jobsList) {
+            if (each.getJobAssignmentStatus() == true) filteredJob.add(each);
+        }
+        jobsList.removeAll(filteredJob);
+
+        // sort by date
         Collections.sort(jobsList, new Comparator<Job>() {
             public int compare(Job o1, Job o2) {
                 if (o1.getJobAssignmentDate() == null || o2.getJobAssignmentDate() == null)
@@ -117,7 +127,12 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         });
 
         adapter = new JobAdapter(jobsList, getActivity());
-        recyclerView.setAdapter(adapter);
+
+        if (adapter.getItemCount() != 0) {
+            recyclerView.setAdapter(adapter);
+        } else {
+            swipeRefreshLayout.setVisibility(View.GONE);
+        }
         dismissProgressDialog();
     }
 

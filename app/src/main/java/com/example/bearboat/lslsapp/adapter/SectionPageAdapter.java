@@ -27,4 +27,9 @@ public class SectionPageAdapter extends FragmentPagerAdapter {
     public void addFragment(Fragment fragment) {
         mFragmentList.add(fragment);
     }
+
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+    }
 }
