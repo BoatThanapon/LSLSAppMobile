@@ -1,6 +1,7 @@
 package com.example.bearboat.lslsapp.fragment;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -33,6 +34,7 @@ import com.example.bearboat.lslsapp.model.LoginStatus;
 import com.example.bearboat.lslsapp.model.Shipping;
 import com.example.bearboat.lslsapp.tool.MySharedPreference;
 import com.example.bearboat.lslsapp.tool.UserInterfaceUtils;
+import com.example.bearboat.lslsapp.tool.Validator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -62,6 +64,7 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
     private APIService mAPIService;
     private AlertDialog.Builder builder;
     private SweetAlertDialog pDialog;
+    private Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +76,7 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
     }
 
     private void initInstances(View rootView) {
+        mContext = getContext();
 
         getActivity().setTitle(getResources().getString(R.string.action_bar_jobs_sub));
         builder = new AlertDialog.Builder(getContext());
@@ -80,7 +84,11 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
         Bundle mBundle = getArguments();
         job = (Job) mBundle.getSerializable("JOB_ASSIGNMENT");
 
-        getShippingDetail();
+        if (Validator.isConnected(mContext)) {
+            getShippingDetail();
+        } else {
+            showToast(mContext, getString(R.string.connection_failed));
+        }
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.google_map_fragment);
         if (mapFragment != null) {
@@ -106,7 +114,7 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
 
     private void showUpdateDialog() {
 
-        builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         LayoutInflater inflater = this.getLayoutInflater(null);
         View dialogView = inflater.inflate(R.layout.alert_update_shipping, null);
@@ -118,8 +126,14 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 alertDialog.dismiss();
-                updateStatusShipping(etReceiverName.getText().toString());
+
+                if (Validator.isConnected(mContext)) {
+                    updateStatusShipping(etReceiverName.getText().toString());
+                } else {
+                    showToast(mContext, getString(R.string.connection_failed));
+                }
             }
         });
 

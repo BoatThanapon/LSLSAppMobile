@@ -1,5 +1,6 @@
 package com.example.bearboat.lslsapp.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import com.example.bearboat.lslsapp.manager.APIService;
 import com.example.bearboat.lslsapp.manager.ApiUtils;
 import com.example.bearboat.lslsapp.model.Job;
 import com.example.bearboat.lslsapp.tool.MySharedPreference;
+import com.example.bearboat.lslsapp.tool.Validator;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private JobAdapter adapter;
     private APIService mAPIService;
     private SweetAlertDialog pDialog;
+    private Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +59,8 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     private void initInstances(View rootView) {
+        mContext = getContext();
+
         swipeRefreshLayout = rootView.findViewById(R.id.refresh);
         swipeRefreshLayout.setOnRefreshListener(this);
 
@@ -68,9 +73,13 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         recyclerView.setHasFixedSize(true);
 
         truckDriverId = MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID,
-                getContext());
+                mContext);
 
-        getJobsList(truckDriverId, false);
+        if (Validator.isConnected(mContext)) {
+            getJobsList(truckDriverId, false);
+        } else {
+            showToast(mContext, getString(R.string.connection_failed));
+        }
     }
 
     private void getJobsList(String truckDriverId, Boolean isPullToRefresh) {
@@ -89,7 +98,7 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 } else {
 
                     dismissProgressDialog();
-                    showToast(getContext(), getString(R.string.on_failure));
+                    showToast(mContext, getString(R.string.on_failure));
                     try {
                         Log.i(TAG, "onResponse: " + response.errorBody().string());
                     } catch (IOException e) {
@@ -101,7 +110,7 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             @Override
             public void onFailure(Call<List<Job>> call, Throwable t) {
                 dismissProgressDialog();
-                showToast(getContext(), getString(R.string.on_failure));
+                showToast(mContext, getString(R.string.on_failure));
                 Log.i(TAG, "onFailure: " + t.toString());
             }
         });
@@ -139,17 +148,24 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onRefresh() {
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getJobsList(truckDriverId, true);
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1500);
+        if (Validator.isConnected(mContext)) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getJobsList(truckDriverId, true);
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }, 1500);
+        } else {
+            swipeRefreshLayout.setRefreshing(false);
+            showToast(mContext, getString(R.string.connection_failed));
+        }
+
+
     }
 
     private void showProgressDialog() {
-        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog = new SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.setTitleText(getString(R.string.loading));
         pDialog.setCancelable(false);
         pDialog.show();

@@ -14,5 +14,4 @@ public class UserInterfaceUtils {
                 Toast.LENGTH_SHORT);
         toast.show();
     }
-
 }

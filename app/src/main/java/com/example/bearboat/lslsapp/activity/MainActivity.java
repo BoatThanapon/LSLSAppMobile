@@ -14,7 +14,11 @@ import com.example.bearboat.lslsapp.adapter.SectionPageAdapter;
 import com.example.bearboat.lslsapp.fragment.JobsFragment;
 import com.example.bearboat.lslsapp.fragment.MapsFragment;
 import com.example.bearboat.lslsapp.fragment.ProfileFragment;
+import com.example.bearboat.lslsapp.tool.MySharedPreference;
 import com.example.bearboat.lslsapp.tool.UserInterfaceUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,12 +82,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                switch (position){
-                    case 0: if (getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.action_bar_location);
+                switch (position) {
+                    case 0:
+                        if (getSupportActionBar() != null)
+                            getSupportActionBar().setTitle(R.string.action_bar_location);
                         break;
-                    case 1: if (getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.action_bar_jobs);
+                    case 1:
+                        if (getSupportActionBar() != null)
+                            getSupportActionBar().setTitle(R.string.action_bar_jobs);
                         break;
-                    case 2: if (getSupportActionBar() != null) getSupportActionBar().setTitle(R.string.action_bar_profile);
+                    case 2:
+                        if (getSupportActionBar() != null)
+                            getSupportActionBar().setTitle(R.string.action_bar_profile);
                         break;
                 }
                 if (prevMenuItem != null) {
@@ -150,5 +160,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
+        String current = simpleDateFormat.format(new Date());
+
+        MySharedPreference.putPref(MySharedPreference.LAST_ACTIVE_TIME, current, getApplicationContext());
     }
 }

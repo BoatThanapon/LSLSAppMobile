@@ -1,6 +1,7 @@
 package com.example.bearboat.lslsapp.fragment;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -26,6 +27,7 @@ import com.example.bearboat.lslsapp.model.LoginStatus;
 import com.example.bearboat.lslsapp.model.TruckLocation;
 import com.example.bearboat.lslsapp.tool.MySharedPreference;
 import com.example.bearboat.lslsapp.tool.UserInterfaceUtils;
+import com.example.bearboat.lslsapp.tool.Validator;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -59,6 +61,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private Marker mCurrLocationMarker;
     private LocationRequest mLocationRequest;
     private LatLng latLng;
+    private Context mContext;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,6 +73,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     private void initInstances(View rootView) {
+        mContext = getContext();
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
@@ -87,7 +91,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getContext(),
+            if (ContextCompat.checkSelfPermission(mContext,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 buildGoogleApiClient();
@@ -100,7 +104,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     }
 
     protected synchronized void buildGoogleApiClient() {
-        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
+        mGoogleApiClient = new GoogleApiClient.Builder(mContext)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -117,7 +121,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-        if (ContextCompat.checkSelfPermission(getContext(),
+        if (ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
@@ -139,13 +143,18 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         Log.i(TAG, "onInfoWindowClick: " + latLng.latitude + " : " + latLng.longitude);
 
-        shareLocation(latLng);
+
+        if (Validator.isConnected(mContext)) {
+            shareLocation(latLng);
+        } else {
+            showToast(mContext, getString(R.string.connection_failed));
+        }
     }
 
     private void shareLocation(LatLng latLng) {
 
         String truckDriverId = MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID,
-                getContext());
+                mContext);
 
         TruckLocation truckLocation = new TruckLocation();
         truckLocation.setTruckDriverId(Integer.parseInt(truckDriverId));
@@ -162,7 +171,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
                 } else {
 
-                    showToast(getContext(), getString(R.string.on_failure));
+                    showToast(mContext, getString(R.string.on_failure));
                     try {
                         Log.i(TAG, "onResponse: " + response.errorBody().string());
                     } catch (IOException e) {
@@ -173,7 +182,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
             @Override
             public void onFailure(Call<Boolean> call, Throwable t) {
-                showToast(getContext(), getString(R.string.on_failure));
+                showToast(mContext, getString(R.string.on_failure));
                 Log.i(TAG, "onFailure: " + t.toString());
             }
         });
@@ -182,7 +191,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void onSuccess(Boolean isSuccess) {
 
-        if (isSuccess) UserInterfaceUtils.showToast(getContext(), "Location sent!");
+        if (isSuccess) UserInterfaceUtils.showToast(mContext, "Location sent!");
     }
 
     @Override
@@ -220,7 +229,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getContext(),
+        if (ContextCompat.checkSelfPermission(mContext,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -261,7 +270,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
                     // permission was granted. Do the
                     // contacts-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(getContext(),
+                    if (ContextCompat.checkSelfPermission(mContext,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 
@@ -274,7 +283,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 } else {
 
                     // Permission denied, Disable the functionality that depends on this permission.
-                    Toast.makeText(getContext(), "permission denied", Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, "permission denied", Toast.LENGTH_LONG).show();
                 }
                 return;
             }

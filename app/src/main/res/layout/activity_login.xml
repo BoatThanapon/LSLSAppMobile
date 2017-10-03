@@ -73,7 +73,6 @@
                     android:imeOptions="actionDone"/>
             </android.support.design.widget.TextInputLayout>
 
-
             <Button
                 android:id="@+id/btnLogin"
                 android:layout_width="fill_parent"

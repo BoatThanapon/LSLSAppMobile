@@ -2,6 +2,7 @@ package com.example.bearboat.lslsapp.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +24,9 @@ import com.example.bearboat.lslsapp.tool.MySharedPreference;
 import com.example.bearboat.lslsapp.tool.Validator;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
@@ -47,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        mContext = getApplicationContext();
 
         checkLoggedIn();
 
@@ -55,15 +60,19 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
     }
 
     private void checkLoggedIn() {
-        if (MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID, getApplicationContext()) != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+        Boolean isActiveOverHalfHour = Validator.isActiveOverHalfHour(mContext);
+        Boolean isLoggedIn = MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID, mContext) != null;
+
+        Log.i(TAG, "checkLoggedIn: " + isActiveOverHalfHour + " " + isLoggedIn);
+        if (!isActiveOverHalfHour && isLoggedIn) {
+            Intent intent = new Intent(mContext, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
     }
 
     private void initInstance() {
-        mContext = getApplicationContext();
 
         btnLogin = (Button) findViewById(R.id.btnLogin);
         etUsername = (EditText) findViewById(R.id.etUsername);
@@ -101,11 +110,11 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
                 showToast(mContext, getString(R.string.empty_username_password));
 
             } else {
-                if (Validator.isUsernameValid(username)) {
+                if (!Validator.isUsernameValid(username)) {
 
                     showToast(mContext, getString(R.string.invalid_username));
 
-                } else if (Validator.isPasswordValid(password)) {
+                } else if (!Validator.isPasswordValid(password)) {
 
                     showToast(mContext, getString(R.string.invalid_password));
 
@@ -162,12 +171,12 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
             MySharedPreference.putPref(MySharedPreference.TRUCK_DRIVER_ID,
                     loginStatus.getTruckDriverId().toString(),
-                    getApplicationContext());
+                    mContext);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(mContext, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
 
