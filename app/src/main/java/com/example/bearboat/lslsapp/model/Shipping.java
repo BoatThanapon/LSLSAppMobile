@@ -42,6 +42,10 @@ public class Shipping {
     @Expose
     private String shippingDocImage;
 
+    @SerializedName("ShippingNote")
+    @Expose
+    private String shippingNote;
+
     public Integer getShippingId() {
         return shippingId;
     }
@@ -136,5 +140,13 @@ public class Shipping {
 
     public void setShippingDocImage(String shippingDocImage) {
         this.shippingDocImage = shippingDocImage;
+    }
+
+    public String getShippingNote() {
+        return shippingNote;
+    }
+
+    public void setShippingNote(String shippingNote) {
+        this.shippingNote = shippingNote;
     }
 }
