@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -121,8 +122,30 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
         builder.setView(dialogView);
 
         final AlertDialog alertDialog = builder.create();
+        final CheckBox cbComplete = dialogView.findViewById(R.id.cbComplete);
+        final CheckBox cbIncomplete = dialogView.findViewById(R.id.cbIncomplete);
+        final EditText etNote = dialogView.findViewById(R.id.etNote);
         final EditText etReceiverName = dialogView.findViewById(R.id.etReceiverName);
         final Button btnUpdate = dialogView.findViewById(R.id.btnUpdate);
+
+        cbComplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbIncomplete.setChecked(false);
+                etNote.setVisibility(View.GONE);
+                etReceiverName.setVisibility(View.VISIBLE);
+            }
+        });
+
+        cbIncomplete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbComplete.setChecked(false);
+                etNote.setVisibility(View.VISIBLE);
+                etReceiverName.setVisibility(View.GONE);
+            }
+        });
+
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -294,5 +317,11 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
         if (pDialog != null && pDialog.isShowing()) {
             pDialog.dismiss();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismissProgressDialog();
     }
 }

@@ -65,10 +65,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
         Boolean isLoggedIn = MySharedPreference.getPref(MySharedPreference.TRUCK_DRIVER_ID, mContext) != null;
 
         Log.i(TAG, "checkLoggedIn: " + isActiveOverHalfHour + " " + isLoggedIn);
-        if (!isActiveOverHalfHour && isLoggedIn) {
-            Intent intent = new Intent(mContext, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+
+        if (!isActiveOverHalfHour){
+            if (isLoggedIn){
+                Intent intent = new Intent(mContext, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
         }
     }
 

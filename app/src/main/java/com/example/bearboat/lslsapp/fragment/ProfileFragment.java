@@ -169,4 +169,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener{
 
         progressDialog.dismiss();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismissProgressDialog();
+    }
 }

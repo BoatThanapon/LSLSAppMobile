@@ -160,8 +160,6 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             swipeRefreshLayout.setRefreshing(false);
             showToast(mContext, getString(R.string.connection_failed));
         }
-
-
     }
 
     private void showProgressDialog() {
@@ -175,5 +173,11 @@ public class JobsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         if (pDialog != null && pDialog.isShowing()) {
             pDialog.dismiss();
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dismissProgressDialog();
     }
 }

@@ -42,6 +42,7 @@ public class Validator {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
         String current = simpleDateFormat.format(new Date());
         String lastActive = MySharedPreference.getPref(MySharedPreference.LAST_ACTIVE_TIME, context);
+        Boolean result = false;
 
         if (lastActive != null) {
             try {
@@ -50,14 +51,16 @@ public class Validator {
 
                 long diffMin = (int) (currentDate.getTime() - lastFetchDate.getTime()) / (1000 * 60);
 
-                if (diffMin < 1) {
-                    return true;
+                Log.i("TEST", "isActiveOverHalfHour: " + diffMin);
+
+                if (diffMin >= 30) {
+                    result = true;
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
-                return false;
+                result = false;
             }
         }
-        return false;
+        return result;
     }
 }

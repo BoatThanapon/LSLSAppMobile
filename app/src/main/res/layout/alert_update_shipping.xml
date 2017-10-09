@@ -20,19 +20,55 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Status of shipping:"
+        android:layout_margin="@dimen/activity_horizontal_margin"/>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cbComplete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onCheckboxClicked"
+        android:text="Complete"
+        android:checked="true"
+        android:layout_marginLeft="18dp"/>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cbIncomplete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onCheckboxClicked"
+        android:text="Incomplete"
+        android:layout_marginLeft="18dp"/>
+
+    <EditText
+        android:id="@+id/etNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="6dp"
+        android:hint="Note ..."
+        android:visibility="gone"
+        android:paddingLeft="4dp"/>
+
     <EditText
         android:id="@+id/etReceiverName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:hint="Receiver Name"
-        android:layout_marginTop="6dp"/>
+        android:layout_marginTop="6dp"
+        android:hint="Receiver Name ..."
+        android:paddingLeft="4dp"/>
 
     <Button
         android:id="@+id/btnUpdate"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:background="@color/colorAccent"
         android:foreground="?attr/selectableItemBackground"
         android:text="Update"

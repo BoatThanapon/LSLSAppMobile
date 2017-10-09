@@ -292,4 +292,5 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             // You can add here other case statements according to your requirement.
         }
     }
+
 }

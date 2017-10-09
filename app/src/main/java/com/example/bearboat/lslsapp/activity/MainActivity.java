@@ -1,5 +1,6 @@
 package com.example.bearboat.lslsapp.activity;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,7 +17,9 @@ import com.example.bearboat.lslsapp.fragment.MapsFragment;
 import com.example.bearboat.lslsapp.fragment.ProfileFragment;
 import com.example.bearboat.lslsapp.tool.MySharedPreference;
 import com.example.bearboat.lslsapp.tool.UserInterfaceUtils;
+import com.example.bearboat.lslsapp.tool.Validator;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -161,9 +164,32 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+        Log.i(TAG, "onDestroy: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: ");
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/M/yyyy hh:mm:ss");
         String current = simpleDateFormat.format(new Date());
 
         MySharedPreference.putPref(MySharedPreference.LAST_ACTIVE_TIME, current, getApplicationContext());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: ");
+
+        Boolean isActiveOverHalfHour = Validator.isActiveOverHalfHour(getApplicationContext());
+
+        if (isActiveOverHalfHour){
+            MySharedPreference.clearPref(getApplicationContext());
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
     }
 }
