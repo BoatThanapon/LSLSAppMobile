@@ -7,7 +7,7 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:divider="?android:dividerHorizontal"
         android:showDividers="middle"
@@ -20,6 +20,7 @@
         android:layout_height="1dp"
         android:background="@android:color/darker_gray" />
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,21 +28,24 @@
         android:layout_margin="@dimen/activity_horizontal_margin"/>
 
     <android.support.v7.widget.AppCompatCheckBox
+        android:button="@null"
+        android:background="@drawable/selector_tick"
         android:id="@+id/cbComplete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:onClick="onCheckboxClicked"
-        android:text="Complete"
+        android:text=""
         android:checked="true"
-        android:layout_marginLeft="18dp"/>
+        />
 
     <android.support.v7.widget.AppCompatCheckBox
+        android:button="@null"
+        android:background="@drawable/selector_cross"
         android:id="@+id/cbIncomplete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:onClick="onCheckboxClicked"
-        android:text="Incomplete"
-        android:layout_marginLeft="18dp"/>
+        android:text="" />
 
     <EditText
         android:id="@+id/etNote"
@@ -73,5 +77,4 @@
         android:foreground="?attr/selectableItemBackground"
         android:text="Update"
         android:textColor="@color/colorWhite" />
-
 </LinearLayout>

@@ -33,7 +33,7 @@ public interface APIService {
 
     //For Get List Job Assignment of TruckDriverId
     // JobAssignment/GetListJobAssignment?truckDriverId=1
-        @GET("JobAssignment/GetListJobAssignment")
+    @GET("JobAssignment/GetListJobAssignment")
     Call<List<Job>> getJobsList(@Query("truckDriverId") String truckDriverId);
 
     //For Get Information of Shipping

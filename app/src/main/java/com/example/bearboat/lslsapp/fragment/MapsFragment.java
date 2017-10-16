@@ -3,6 +3,7 @@ package com.example.bearboat.lslsapp.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -20,6 +21,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.akexorcist.googledirection.DirectionCallback;
+import com.akexorcist.googledirection.GoogleDirection;
+import com.akexorcist.googledirection.constant.TransportMode;
+import com.akexorcist.googledirection.constant.Unit;
+import com.akexorcist.googledirection.model.Direction;
+import com.akexorcist.googledirection.model.Step;
+import com.akexorcist.googledirection.util.DirectionConverter;
 import com.example.bearboat.lslsapp.R;
 import com.example.bearboat.lslsapp.manager.APIService;
 import com.example.bearboat.lslsapp.manager.ApiUtils;
@@ -41,8 +49,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -101,6 +112,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -213,6 +225,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         markerOptions.snippet(latLng.latitude + ", " + latLng.longitude);
         mCurrLocationMarker = mMap.addMarker(markerOptions);
         mCurrLocationMarker.showInfoWindow();
+
+        MySharedPreference.putPref(MySharedPreference.CURRENT_LATITUBE, String.valueOf(latLng.latitude), getContext());
+        MySharedPreference.putPref(MySharedPreference.CURRENT_LONGTITUBE, String.valueOf(latLng.longitude), getContext());
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

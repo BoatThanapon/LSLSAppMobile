@@ -42,5 +42,6 @@ dependencies {
     //google play service maps
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.google.android.gms:play-services-location:11.0.4'
+    compile 'com.akexorcist:googledirectionlibrary:1.0.5'
 
 }

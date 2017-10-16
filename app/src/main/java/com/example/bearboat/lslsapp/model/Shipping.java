@@ -35,14 +35,13 @@ public class Shipping {
     @SerializedName("jobIsActive")
     @Expose
     private Boolean jobIsActive;
-    @SerializedName("receiverDateTime")
+    @SerializedName("receiveDateTime")
     @Expose
-    private Object receiverDateTime;
-    @SerializedName("ShippingDocImage")
+    private String receiveDateTime;
+    @SerializedName("shippingDocImage")
     @Expose
-    private String shippingDocImage;
-
-    @SerializedName("ShippingNote")
+    private Object shippingDocImage;
+    @SerializedName("shippingNote")
     @Expose
     private String shippingNote;
 
@@ -126,19 +125,19 @@ public class Shipping {
         this.jobIsActive = jobIsActive;
     }
 
-    public Object getRecieveDateTime() {
-        return receiverDateTime;
+    public String getReceiveDateTime() {
+        return receiveDateTime;
     }
 
-    public void setReceiverDateTime(Object receiverDateTime) {
-        this.receiverDateTime = receiverDateTime;
+    public void setReceiveDateTime(String receiveDateTime) {
+        this.receiveDateTime = receiveDateTime;
     }
 
-    public String getShippingDocImage() {
+    public Object getShippingDocImage() {
         return shippingDocImage;
     }
 
-    public void setShippingDocImage(String shippingDocImage) {
+    public void setShippingDocImage(Object shippingDocImage) {
         this.shippingDocImage = shippingDocImage;
     }
 
@@ -149,4 +148,5 @@ public class Shipping {
     public void setShippingNote(String shippingNote) {
         this.shippingNote = shippingNote;
     }
+
 }

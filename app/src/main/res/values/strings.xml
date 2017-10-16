@@ -17,6 +17,7 @@
     <string name="double_back_exit">Press once again to exit!</string>
 
     <string name="google_map_key">AIzaSyC8eTxK26oSiRF8foiQxkxXXWIWwUq_uAI</string>
+    <string name="server_key">AIzaSyAYUsFi2XsuGcOs1m5u8rNt0P4hJb6Hqtc</string>
 
     <string name="title_shipping_id"><![CDATA[<b>Shipping ID:</b>]]> %1$s</string>
     <string name="title_date_transport"><![CDATA[<br><b>Date of Transport:</b> ]]> %1$s</string>
@@ -25,6 +26,7 @@
     <string name="title_destination"><![CDATA[<br><b>Destination:</b> ]]> %1$s</string>
     <string name="title_employer"><![CDATA[<br><b>Employer:</b> ]]> %1$s</string>
     <string name="title_status"><![CDATA[<br><b>Status:</b> ]]> %1$s</string>
+    <string name="title_shipping_note"><![CDATA[<br><b>Shipping Note:</b> ]]> %1$s</string>
 
     <string name="connection_failed">Check Your Internet Connection!</string>
     <string name="on_failure">Something went wrong!</string>
