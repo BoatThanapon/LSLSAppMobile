@@ -226,8 +226,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mCurrLocationMarker = mMap.addMarker(markerOptions);
         mCurrLocationMarker.showInfoWindow();
 
-        MySharedPreference.putPref(MySharedPreference.CURRENT_LATITUBE, String.valueOf(latLng.latitude), getContext());
-        MySharedPreference.putPref(MySharedPreference.CURRENT_LONGTITUBE, String.valueOf(latLng.longitude), getContext());
+        if (getContext() != null) {
+            MySharedPreference.putPref(MySharedPreference.CURRENT_LATITUBE, String.valueOf(latLng.latitude), getContext());
+            MySharedPreference.putPref(MySharedPreference.CURRENT_LONGTITUBE, String.valueOf(latLng.longitude), getContext());
+        }
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
