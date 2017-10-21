@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.akexorcist.googledirection.DirectionCallback;
@@ -81,9 +82,7 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
     private AlertDialog.Builder builder;
     private SweetAlertDialog pDialog;
     private Context mContext;
-
-    private String shippingStatus;
-    private String shippingDetail;
+    private AlertDialog alertDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,7 +128,7 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
         Double lat = Double.valueOf((MySharedPreference.getPref(MySharedPreference.CURRENT_LATITUBE, getContext())));
         Double lng = Double.valueOf(MySharedPreference.getPref(MySharedPreference.CURRENT_LONGTITUBE, getContext()));
 
-        if (lat != null && lng != null){
+        if (lat != null && lng != null) {
             origin = new LatLng(lat, lng);
 
         } else {
@@ -167,7 +166,6 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
 
                         if (direction.isOK()) {
 
-                            showToast(getContext(), status);
                             List<Step> stepList = direction.getRouteList().get(0).getLegList().get(0).getStepList();
                             ArrayList<PolylineOptions> polylineOptionList = DirectionConverter.createTransitPolyline(getContext(), stepList, 5, Color.RED, 3, Color.BLUE);
                             for (PolylineOptions polylineOption : polylineOptionList) {
@@ -192,66 +190,66 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
         View dialogView = inflater.inflate(R.layout.alert_update_shipping, null);
         builder.setView(dialogView);
 
-        final AlertDialog alertDialog = builder.create();
-        final CheckBox cbComplete = dialogView.findViewById(R.id.cbComplete);
-        final CheckBox cbIncomplete = dialogView.findViewById(R.id.cbIncomplete);
-        final EditText etNote = dialogView.findViewById(R.id.etNote);
-        final EditText etReceiverName = dialogView.findViewById(R.id.etReceiverName);
-        final Button btnUpdate = dialogView.findViewById(R.id.btnUpdate);
+        alertDialog = builder.create();
+        alertDialog.setTitle("Select Shipping Status:");
+        final Button btnComplete = dialogView.findViewById(R.id.btnComplete);
+        final Button btnIncomplete = dialogView.findViewById(R.id.btnIncomplete);
 
-        cbComplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cbIncomplete.setChecked(false);
-                etNote.setVisibility(View.GONE);
-                etReceiverName.setVisibility(View.VISIBLE);
-            }
-        });
-
-        cbIncomplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cbComplete.setChecked(false);
-                etNote.setVisibility(View.VISIBLE);
-                etReceiverName.setVisibility(View.GONE);
-            }
-        });
-
-        btnUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                alertDialog.dismiss();
-
-                if (cbComplete.isChecked()){
-                    shippingStatus = SHIPPING_COMPLETE;
-                    shippingDetail = etReceiverName.getText().toString().trim();
-                } else if (cbIncomplete.isChecked()){
-                    shippingStatus = SHIPPING_INCOMPLETE;
-                    shippingDetail = etNote.getText().toString().trim();
-                }
-
-                if (Validator.isConnected(mContext)) {
-                    updateStatusShipping(shippingStatus, shippingDetail);
-                } else {
-                    showToast(mContext, getString(R.string.connection_failed));
-                }
-            }
-        });
+        btnComplete.setOnClickListener(this);
+        btnIncomplete.setOnClickListener(this);
 
         alertDialog.show();
     }
 
-    private void updateStatusShipping(String shippingStatus, String shippingDetail) {
+    private void showShippingNoteDialog(final Boolean isShippingComplete) {
+        if (alertDialog != null) alertDialog.dismiss();
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        LayoutInflater inflater = this.getLayoutInflater(null);
+        View dialogView = inflater.inflate(R.layout.dialog_shipping_note, null);
+        builder.setView(dialogView);
+        final EditText etReceiverName = dialogView.findViewById(R.id.etReceiverName);
+        final EditText etShippingNote = dialogView.findViewById(R.id.etShippingNote);
+
+        if (isShippingComplete) {
+            etReceiverName.setVisibility(View.VISIBLE);
+            etShippingNote.setVisibility(View.GONE);
+        } else {
+            etReceiverName.setVisibility(View.GONE);
+            etShippingNote.setVisibility(View.VISIBLE);
+        }
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String shippingDetail = isShippingComplete ?
+                        etReceiverName.getText().toString().trim() :
+                        etShippingNote.getText().toString().trim();
+                showComfirmationDialog(isShippingComplete, shippingDetail);
+            }
+        });
+
+        builder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog = builder.create();
+        alertDialog.setTitle("Enter Shipping Note Detail");
+        alertDialog.show();
+    }
+
+    private void updateStatusShipping(Boolean isShippingComplete, String shippingDetail) {
 
         mAPIService = ApiUtils.getAPIService();
 
-
-        if (shippingStatus == SHIPPING_COMPLETE) {
+        if (isShippingComplete) {
             shipping.setStatusOfTransportation(true);
             shipping.setReceiverName(shippingDetail);
-        }
-        else if (shippingStatus == SHIPPING_INCOMPLETE) {
+        } else {
             shipping.setStatusOfTransportation(false);
             shipping.setShippingNote(shippingDetail);
         }
@@ -354,12 +352,18 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
 
         } else if (view.getId() == R.id.fabUpdate) {
             showUpdateDialog();
+        } else if (view.getId() == R.id.btnComplete) {
+            Boolean isShippingComplete = true;
+            showShippingNoteDialog(isShippingComplete);
+        } else if (view.getId() == R.id.btnIncomplete) {
+            Boolean isShippingComplete = false;
+            showShippingNoteDialog(isShippingComplete);
         }
     }
 
     private void showShippingDetialDialog() {
 
-        String statusShipping = shipping.getStatusOfTransportation() ? "DONE" : "In Process";
+        String statusShipping = shipping.getStatusOfTransportation() ? "COMPLETE" : "INCOMPLETE";
 
         String msg = String.format(getString(R.string.title_shipping_id), shipping.getShippingId());
         msg += String.format(getString(R.string.title_date_transport), shipping.getDateOfTransportation());
@@ -368,7 +372,8 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
         msg += String.format(getString(R.string.title_destination), shipping.getDestination());
         msg += String.format(getString(R.string.title_employer), shipping.getEmployer());
         msg += String.format(getString(R.string.title_status), statusShipping);
-        if (shipping.getShippingNote() != null) msg += String.format(getString(R.string.title_shipping_note), shipping.getShippingNote());
+        if (shipping.getShippingNote() != null)
+            msg += String.format(getString(R.string.title_shipping_note), shipping.getShippingNote());
         Spanned showMsg = Html.fromHtml(msg);
 
         Log.i(TAG, "onSuccess: " + shipping.getDestination());
@@ -378,6 +383,31 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (builder != null) dialogInterface.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void showComfirmationDialog(final Boolean isShippingComplete, final String shippingDetail){
+
+        String statusShipping = isShippingComplete ? "COMPLETE" : "INCOMPLETE";
+
+        String msg = String.format(getString(R.string.title_shipping_id), shipping.getShippingId());
+        msg += String.format(getString(R.string.title_product_name), shipping.getProductName());
+        msg += String.format(getString(R.string.title_status), statusShipping);
+        msg += String.format(getString(R.string.title_shipping_note), shippingDetail);
+        Spanned showMsg = Html.fromHtml(msg);
+
+        builder.setTitle("Comfirm");
+        builder.setMessage(showMsg);
+        builder.setPositiveButton("Comfirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (Validator.isConnected(mContext)) {
+                    updateStatusShipping(isShippingComplete, shippingDetail);
+                } else {
+                    showToast(mContext, getString(R.string.connection_failed));
+                }
             }
         });
         builder.show();
