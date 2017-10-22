@@ -55,6 +55,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -73,6 +74,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     private LocationRequest mLocationRequest;
     private LatLng latLng;
     private Context mContext;
+    private SweetAlertDialog pDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -173,6 +175,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         truckLocation.setLatitude(latLng.latitude);
         truckLocation.setLongitude(latLng.longitude);
 
+        showProgressDialog();
+
         mAPIService = ApiUtils.getAPIService();
         mAPIService.updateTruckLocation(truckDriverId, truckLocation).enqueue(new Callback<Boolean>() {
             @Override
@@ -182,7 +186,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                     onSuccess(response.body());
 
                 } else {
-
+                    dismissProgressDialog();
                     showToast(mContext, getString(R.string.on_failure));
                     try {
                         Log.i(TAG, "onResponse: " + response.errorBody().string());
@@ -194,6 +198,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
             @Override
             public void onFailure(Call<Boolean> call, Throwable t) {
+                dismissProgressDialog();
                 showToast(mContext, getString(R.string.on_failure));
                 Log.i(TAG, "onFailure: " + t.toString());
             }
@@ -203,6 +208,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
     private void onSuccess(Boolean isSuccess) {
 
+        dismissProgressDialog();
         if (isSuccess) UserInterfaceUtils.showToast(mContext, "Location sent!");
     }
 
@@ -307,6 +313,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
             // other 'case' lines to check for other permissions this app might request.
             // You can add here other case statements according to your requirement.
+        }
+    }
+
+    private void showProgressDialog() {
+        pDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.setTitleText(getString(R.string.loading));
+        pDialog.setCancelable(false);
+        pDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        if (pDialog != null && pDialog.isShowing()) {
+            pDialog.dismiss();
         }
     }
 

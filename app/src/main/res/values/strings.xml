@@ -27,6 +27,7 @@
     <string name="title_employer"><![CDATA[<br><b>Employer:</b> ]]> %1$s</string>
     <string name="title_status"><![CDATA[<br><b>Status:</b> ]]> %1$s</string>
     <string name="title_shipping_note"><![CDATA[<br><b>Shipping Note:</b> ]]> %1$s</string>
+    <string name="title_receiver_name"><![CDATA[<br><b>Receiver Name:</b> ]]> %1$s</string>
 
     <string name="connection_failed">Check Your Internet Connection!</string>
     <string name="on_failure">Something went wrong!</string>

@@ -391,11 +391,12 @@ public class ShippingFragment extends Fragment implements OnMapReadyCallback, Vi
     private void showComfirmationDialog(final Boolean isShippingComplete, final String shippingDetail){
 
         String statusShipping = isShippingComplete ? "COMPLETE" : "INCOMPLETE";
+        String shippingDetailTitle = isShippingComplete ?  getString(R.string.title_receiver_name) : getString(R.string.title_shipping_note);
 
         String msg = String.format(getString(R.string.title_shipping_id), shipping.getShippingId());
         msg += String.format(getString(R.string.title_product_name), shipping.getProductName());
         msg += String.format(getString(R.string.title_status), statusShipping);
-        msg += String.format(getString(R.string.title_shipping_note), shippingDetail);
+        msg += String.format(shippingDetailTitle, shippingDetail);
         Spanned showMsg = Html.fromHtml(msg);
 
         builder.setTitle("Comfirm");
