@@ -21,12 +21,21 @@ import static org.junit.Assert.*;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
-    @Test
-    public void useAppContext() throws Exception {
-        // Context of the app under test.
-        Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.bearboat.lslsapp", appContext.getPackageName());
+    @Test
+    public void isConnected() throws Exception {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        Boolean actual = Validator.isConnected(appContext);
+
+        assertTrue(actual);
+    }
+
+    @Test
+    public void isActiveOverHalfHour() throws Exception {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        Boolean actual = Validator.isActiveOverHalfHour(appContext);
+
+        assertFalse(actual);
     }
 
 
