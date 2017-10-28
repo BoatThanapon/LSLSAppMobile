@@ -4,9 +4,14 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.bearboat.lslsapp.tool.Validator;
+
+import junit.framework.Assert;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.InstrumentationRegistry.getContext;
 import static org.junit.Assert.*;
 
 /**
@@ -23,4 +28,6 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.example.bearboat.lslsapp", appContext.getPackageName());
     }
+
+
 }

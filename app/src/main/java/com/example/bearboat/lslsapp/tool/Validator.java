@@ -14,17 +14,20 @@ import java.util.Date;
 
 public class Validator {
 
+    //test
     public static boolean isStringEmpty(final String text) {
 
         return text == null || text.isEmpty();
     }
 
+    //test
     public static boolean isUsernameValid(final String username) {
 
         final int usernameLength = username.length();
         return !(usernameLength < 4 || usernameLength > 16);
     }
 
+    //test
     public static boolean isPasswordValid(final String password) {
 
         final int passwordLength = password.length();
