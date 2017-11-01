@@ -19,10 +19,16 @@ public class ValidatorTest {
     @Test
     public void isStringEmpty() throws Exception {
 
+        assertEquals(Validator.isStringEmpty(""),true);
+        assertEquals(Validator.isStringEmpty("asdsad"),false);
+        assertEquals(Validator.isStringEmpty(null),true);
     }
 
     @Test
     public void isUsernameValid() throws Exception {
+        assertEquals(Validator.isUsernameValid("test1234"),true);
+        assertEquals(Validator.isUsernameValid("asdsad"),false);
+        assertEquals(Validator.isUsernameValid(null),true);
     }
 
     @Test

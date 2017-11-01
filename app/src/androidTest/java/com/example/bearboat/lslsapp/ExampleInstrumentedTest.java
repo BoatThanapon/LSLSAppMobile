@@ -2,14 +2,17 @@ package com.example.bearboat.lslsapp;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.core.deps.guava.util.concurrent.Service;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.example.bearboat.lslsapp.tool.MySharedPreference;
 import com.example.bearboat.lslsapp.tool.Validator;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 import static android.support.test.InstrumentationRegistry.getContext;
 import static org.junit.Assert.*;
@@ -36,6 +39,16 @@ public class ExampleInstrumentedTest {
         Boolean actual = Validator.isActiveOverHalfHour(appContext);
 
         assertFalse(actual);
+    }
+
+    @Test
+    public void getPref() throws Exception {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        String actual = MySharedPreference.getPref(null,appContext);
+        assertNull(actual);
+
+        String actualA = MySharedPreference.getPref("1",appContext);
+        assertNull(actualA);
     }
 
 
