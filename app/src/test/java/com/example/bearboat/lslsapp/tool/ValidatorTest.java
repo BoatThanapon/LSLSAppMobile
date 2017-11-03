@@ -27,8 +27,8 @@ public class ValidatorTest {
     @Test
     public void isUsernameValid() throws Exception {
         assertEquals(Validator.isUsernameValid("test1234"),true);
-        assertEquals(Validator.isUsernameValid("asdsad"),false);
-        assertEquals(Validator.isUsernameValid(null),true);
+        assertEquals(Validator.isUsernameValid("test1234564897898456123456789465"),false);
+        assertEquals(Validator.isUsernameValid(""),false);
     }
 
     @Test
